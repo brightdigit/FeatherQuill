@@ -16,7 +16,7 @@ jobs:
     strategy:
       matrix:
         runs-on: [ubuntu-20.04, ubuntu-22.04]
-        swift-version: ["5.7.1", "5.8.1", "5.9", "5.9.2", "5.10"]
+        swift-version: ["5.9", "5.9.2", "5.10"]
     steps:
       - uses: actions/checkout@v4
       - name: Set Ubuntu Release DOT
@@ -77,18 +77,6 @@ jobs:
     strategy:
       matrix:
         include:
-          - xcode: "/Applications/Xcode_14.1.app"
-            os: macos-12
-            iOSVersion: "16.1"
-            watchOSVersion: "9.0"
-            watchName: "Apple Watch Series 5 - 40mm"
-            iPhoneName: "iPhone 12 mini"   
-          - xcode: "/Applications/Xcode_14.2.app"
-            os: macos-12
-            iOSVersion: "16.2"
-            watchOSVersion: "9.1"
-            watchName: "Apple Watch Ultra (49mm)"
-            iPhoneName: "iPhone 14"
           - xcode: "/Applications/Xcode_15.0.1.app"
             os: macos-13
             iOSVersion: "17.0.1"
@@ -167,33 +155,33 @@ jobs:
         run: ./scripts/lint.sh
         if: startsWith(matrix.xcode,'/Applications/Xcode_15.3')
       # - name: Run iOS target tests
-      #   run: xcodebuild test -scheme ${{ env.PACKAGE_NAME }} -sdk "iphonesimulator" -destination 'platform=iOS Simulator,name=${{ matrix.iPhoneName }},OS=${{ matrix.iOSVersion }}' -enableCodeCoverage YES build test
-      # - uses: sersoft-gmbh/swift-coverage-action@v4
-      #   id: coverage-files-iOS
-      #   with:
-      #     fail-on-empty-output: true
-      # - name: Upload coverage to Codecov
-      #   uses: codecov/codecov-action@v4       
-      #   with:
-      #     fail_ci_if_error: true
-      #     verbose: true        
-      #     token: ${{ secrets.CODECOV_TOKEN }}  
-      #     files: ${{ join(fromJSON(steps.coverage-files-iOS.outputs.files), ',') }}   
-      #     flags: iOS,iOS${{ matrix.iOSVersion }},macOS,${{ env.XCODE_NAME }}  
-      # - name: Run watchOS target tests
-      #   run: xcodebuild test -scheme ${{ env.PACKAGE_NAME }} -sdk "watchsimulator" -destination 'platform=watchOS Simulator,name=${{ matrix.watchName }},OS=${{ matrix.watchOSVersion }}' -enableCodeCoverage YES build test
-      # - uses: sersoft-gmbh/swift-coverage-action@v4
-      #   id: coverage-files-watchOS
-      #   with:
-      #     fail-on-empty-output: true
-      # - name: Upload coverage to Codecov
-      #   uses: codecov/codecov-action@v4       
-      #   with:
-      #     fail_ci_if_error: true
-      #     verbose: true        
-      #     token: ${{ secrets.CODECOV_TOKEN }}  
-      #     files: ${{ join(fromJSON(steps.coverage-files-watchOS.outputs.files), ',') }}   
-      #     flags: watchOS,watchOS${{ matrix.watchOSVersion }},macOS,${{ env.XCODE_NAME }}
+        run: xcodebuild test -scheme ${{ env.PACKAGE_NAME }} -sdk "iphonesimulator" -destination 'platform=iOS Simulator,name=${{ matrix.iPhoneName }},OS=${{ matrix.iOSVersion }}' -enableCodeCoverage YES build test
+      - uses: sersoft-gmbh/swift-coverage-action@v4
+        id: coverage-files-iOS
+        with:
+          fail-on-empty-output: true
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4       
+        with:
+          fail_ci_if_error: true
+          verbose: true        
+          token: ${{ secrets.CODECOV_TOKEN }}  
+          files: ${{ join(fromJSON(steps.coverage-files-iOS.outputs.files), ',') }}   
+          flags: iOS,iOS${{ matrix.iOSVersion }},macOS,${{ env.XCODE_NAME }}  
+      - name: Run watchOS target tests
+        run: xcodebuild test -scheme ${{ env.PACKAGE_NAME }} -sdk "watchsimulator" -destination 'platform=watchOS Simulator,name=${{ matrix.watchName }},OS=${{ matrix.watchOSVersion }}' -enableCodeCoverage YES build test
+      - uses: sersoft-gmbh/swift-coverage-action@v4
+        id: coverage-files-watchOS
+        with:
+          fail-on-empty-output: true
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4       
+        with:
+          fail_ci_if_error: true
+          verbose: true        
+          token: ${{ secrets.CODECOV_TOKEN }}  
+          files: ${{ join(fromJSON(steps.coverage-files-watchOS.outputs.files), ',') }}   
+          flags: watchOS,watchOS${{ matrix.watchOSVersion }},macOS,${{ env.XCODE_NAME }}
   build-self:
       name: Build on Self-Hosting macOS
       runs-on: [self-hosted, macOS]
