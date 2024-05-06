@@ -5,6 +5,7 @@ import PackageDescription
 
 let package = Package(
     name: "FeatherQuill",
+    platforms: [.iOS(.v17), .macCatalyst(.v17), .macOS(.v14), .tvOS(.v17), .visionOS(.v1), .watchOS(.v10)],
     products: [
         // Products define the executables and libraries a package produces, making them visible to other packages.
         .library(
