@@ -1,37 +1,81 @@
+//
+//  FeatureAvailabilityMetrics.swift
+//  SimulatorServices
+//
+//  Created by Leo Dion.
+//  Copyright © 2024 BrightDigit.
+//
+//  Permission is hereby granted, free of charge, to any person
+//  obtaining a copy of this software and associated documentation
+//  files (the “Software”), to deal in the Software without
+//  restriction, including without limitation the rights to use,
+//  copy, modify, merge, publish, distribute, sublicense, and/or
+//  sell copies of the Software, and to permit persons to whom the
+//  Software is furnished to do so, subject to the following
+//  conditions:
+//
+//  The above copyright notice and this permission notice shall be
+//  included in all copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND,
+//  EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+//  OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+//  NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+//  HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+//  WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+//  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+//  OTHER DEALINGS IN THE SOFTWARE.
+//
+
 import Foundation
 
-struct FeatureAvailabilityMetrics : Equatable {
-  internal init (value : Double) {
+internal struct FeatureAvailabilityMetrics<UserTypeValue: UserType>: Equatable {
+  private let userType: UserTypeValue
+  private let probability: Double
+
+  fileprivate var value: Double {
+    Double(userType.rawValue) + probability.remainder(dividingBy: 1)
+  }
+
+  fileprivate init(value: Double) {
     let rawValueDouble = floor(value)
-    let rawValue = Int(rawValueDouble)
-    let probability = ((value - rawValueDouble) * 1000).rounded() / 1000.0
+    let rawValue = UserTypeValue.RawValue(rawValueDouble)
+    let probability = ((value - rawValueDouble) * 1_000).rounded() / 1_000.0
     self.init(userType: .init(rawValue: rawValue), probability: probability)
   }
-  
-  public init(userType: UserType, probability: Double) {
+
+  internal init(userType: UserTypeValue, probability: Double) {
     self.userType = userType
     self.probability = probability
-    assert((probability * 1000).rounded() / 1000.0 == probability)
+    assert((probability * 1_000).rounded() / 1_000.0 == probability)
     assert(probability <= 1.0)
   }
-  
-  let userType : UserType
-  let probability : Double
-  
-  func calculateAvailability () -> Bool {
-    let value : Bool
-    if UserType.matches(userType) {
+
+  internal func calculateAvailability() -> Bool {
+    let value: Bool
+    if UserTypeValue.includes(userType) {
       value = true
     } else {
-      let randomValue : Double =  .random(in: 0.0..<1.0)
+      let randomValue: Double = .random(in: 0.0 ..< 1.0)
       print("Random Value: \(randomValue)")
-      value = randomValue <= self.probability
+      value = randomValue <= probability
     }
     return value
   }
-  
-  var value : Double {
-    Double(userType.rawValue) +    probability.remainder(dividingBy: 1)
+}
+
+extension UserDefaults {
+  internal func set(_ value: FeatureAvailabilityMetrics<some Any>, forKey key: String) {
+    set(value.value, forKey: key)
   }
-  
+
+  internal func metrics<UserTypeValue>(
+    forKey key: String
+  ) -> FeatureAvailabilityMetrics<UserTypeValue>? {
+    guard object(forKey: key) != nil else {
+      return nil
+    }
+    let value: Double = double(forKey: key)
+    return .init(value: value)
+  }
 }

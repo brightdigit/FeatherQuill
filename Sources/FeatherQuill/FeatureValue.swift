@@ -1,41 +1,78 @@
-import Foundation
-import SwiftUI
-import Observation
+//
+//  FeatureValue.swift
+//  SimulatorServices
+//
+//  Created by Leo Dion.
+//  Copyright © 2024 BrightDigit.
+//
+//  Permission is hereby granted, free of charge, to any person
+//  obtaining a copy of this software and associated documentation
+//  files (the “Software”), to deal in the Software without
+//  restriction, including without limitation the rights to use,
+//  copy, modify, merge, publish, distribute, sublicense, and/or
+//  sell copies of the Software, and to permit persons to whom the
+//  Software is furnished to do so, subject to the following
+//  conditions:
+//
+//  The above copyright notice and this permission notice shall be
+//  included in all copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND,
+//  EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+//  OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+//  NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+//  HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+//  WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+//  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+//  OTHER DEALINGS IN THE SOFTWARE.
+//
 
-@Observable
-class FeatureValue<ValueType> {
-  
-  internal init(userDefaults: UserDefaults = .standard, key: String, defaultValue : ValueType) {
-    self.userDefaults = userDefaults
-    self.key = key
-    self.defaultValue = defaultValue
-    let initialValue : ValueType
-    let fullKey = [FeatureFlags.rootKey, self.key, FeatureFlags.valueKey].joined(separator: ".")
-    self.fullKey = fullKey
-    if let currentValue = userDefaults.value(forKey: fullKey) as? ValueType  {
-      initialValue = currentValue
-    } else {
-      print("Setting Default Value")
-      userDefaults.setValue(defaultValue, forKey: fullKey)
-      initialValue = defaultValue
+#if canImport(SwiftUI)
+  import Foundation
+  import Observation
+  import SwiftUI
+
+  @Observable
+  public class FeatureValue<ValueType> {
+    private let userDefaults: UserDefaults
+    private let key: String
+    private let defaultValue: ValueType
+    private let fullKey: String
+    public var isEnabled: Binding<ValueType> {
+      .init {
+        self._isEnabled
+      } set: { value in
+        self._isEnabled = value
+      }
     }
-    self._isEnabled = initialValue
-  }
-  private var _isEnabled : ValueType {
-    didSet {
-      self.userDefaults.setValue(self._isEnabled, forKey: self.fullKey)
+
+    private var _isEnabled: ValueType {
+      didSet {
+        userDefaults.setValue(_isEnabled, forKey: fullKey)
+      }
+    }
+
+    internal init(
+      key: String,
+      defaultValue: ValueType,
+      userDefaults: UserDefaults = .standard
+    ) {
+      self.userDefaults = userDefaults
+      self.key = key
+      self.defaultValue = defaultValue
+      let initialValue: ValueType
+      let fullKey = [
+        FeatureFlags.rootKey, self.key, FeatureFlags.valueKey
+      ].joined(separator: ".")
+      self.fullKey = fullKey
+      if let currentValue = userDefaults.value(forKey: fullKey) as? ValueType {
+        initialValue = currentValue
+      } else {
+        print("Setting Default Value")
+        userDefaults.setValue(defaultValue, forKey: fullKey)
+        initialValue = defaultValue
+      }
+      _isEnabled = initialValue
     }
   }
-  let userDefaults : UserDefaults
-  let key : String
-  let defaultValue : ValueType
-  let fullKey : String
-  var isEnabled : Binding<ValueType> {
-    .init {
-      return self._isEnabled
-    } set: { value in
-      self._isEnabled = value
-    }
-  }
-  
-}
+#endif

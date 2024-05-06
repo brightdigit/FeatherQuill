@@ -1,5 +1,5 @@
 //
-//  FeatureFlag.swift
+//  AvailabilityOptions.swift
 //  SimulatorServices
 //
 //  Created by Leo Dion.
@@ -27,45 +27,18 @@
 //  OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#if canImport(SwiftUI)
-  import SwiftUI
+import Foundation
 
-  public protocol FeatureFlag: EnvironmentKey
-    where Value == Feature<ValueType, UserTypeValue> {
-    associatedtype ValueType = Bool
-    associatedtype UserTypeValue: UserType
+public struct AvailabilityOptions: OptionSet {
+  public typealias RawValue = Int
 
-    static var key: String { get }
-    static var audience: UserTypeValue { get }
-    static var probability: Double { get }
-    static var initialValue: ValueType { get }
-    static var options: AvailabilityOptions { get }
+  public static let `default`: AvailabilityOptions = .init()
+  public static let allowOverwriteAvailable: AvailabilityOptions = .init(rawValue: 1)
+  public static let disableUpdateAvailability: AvailabilityOptions = .init(rawValue: 2)
+
+  public var rawValue: Int
+
+  public init(rawValue: RawValue) {
+    self.rawValue = rawValue
   }
-
-  extension FeatureFlag {
-    public static var options: AvailabilityOptions {
-      .default
-    }
-
-    public static var key: String {
-      let typeName = "\(Self.self)"
-      let dropCount = if typeName.hasSuffix("FeatureFlag") {
-        10
-      } else if typeName.hasSuffix("Feature") {
-        7
-      } else {
-        0
-      }
-      return .init(typeName.dropLast(dropCount))
-    }
-
-    public static var defaultValue: Feature<ValueType, UserTypeValue> {
-      .init(
-        key: key,
-        defaultValue: initialValue,
-        userType: audience,
-        probability: probability
-      )
-    }
-  }
-#endif
+}

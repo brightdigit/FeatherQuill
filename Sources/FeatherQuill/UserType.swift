@@ -1,25 +1,32 @@
+//
+//  UserType.swift
+//  SimulatorServices
+//
+//  Created by Leo Dion.
+//  Copyright © 2024 BrightDigit.
+//
+//  Permission is hereby granted, free of charge, to any person
+//  obtaining a copy of this software and associated documentation
+//  files (the “Software”), to deal in the Software without
+//  restriction, including without limitation the rights to use,
+//  copy, modify, merge, publish, distribute, sublicense, and/or
+//  sell copies of the Software, and to permit persons to whom the
+//  Software is furnished to do so, subject to the following
+//  conditions:
+//
+//  The above copyright notice and this permission notice shall be
+//  included in all copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND,
+//  EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+//  OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+//  NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+//  HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+//  WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+//  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+//  OTHER DEALINGS IN THE SOFTWARE.
+//
 
-struct UserType : OptionSet {
-  init(rawValue: Int) {
-    self.rawValue = rawValue
-  }
-  
-  static func matches (_ value: UserType) -> Bool {
-    guard value.rawValue > 0 else {
-      return false
-    }
-    let value : Bool = .random()
-    print("User Matches: \(value)")
-    return value
-  }
-  
-  var rawValue: Int
-  
-  typealias RawValue = Int
-  
-  static let proSubscriber : UserType = UserType(rawValue: 1)
-  static let testFlightBeta : UserType = .init(rawValue: 2)
-  static let any : UserType = .init(rawValue: .max)
-  static let `default` : UserType = [.testFlightBeta , proSubscriber]
-  static let none : UserType = []
+public protocol UserType: OptionSet where Self.RawValue: BinaryInteger {
+  static func includes(_ userType: Self) -> Bool
 }

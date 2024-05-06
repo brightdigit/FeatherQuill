@@ -1,86 +1,123 @@
+//
+//  FeatureAvailability.swift
+//  SimulatorServices
+//
+//  Created by Leo Dion.
+//  Copyright © 2024 BrightDigit.
+//
+//  Permission is hereby granted, free of charge, to any person
+//  obtaining a copy of this software and associated documentation
+//  files (the “Software”), to deal in the Software without
+//  restriction, including without limitation the rights to use,
+//  copy, modify, merge, publish, distribute, sublicense, and/or
+//  sell copies of the Software, and to permit persons to whom the
+//  Software is furnished to do so, subject to the following
+//  conditions:
+//
+//  The above copyright notice and this permission notice shall be
+//  included in all copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND,
+//  EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+//  OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+//  NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+//  HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+//  WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+//  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+//  OTHER DEALINGS IN THE SOFTWARE.
+//
+
 import Foundation
 
-struct FeatureAvailability {
-  private init(userDefaults: UserDefaults, metricsKey: String, availabilityKey: String, shouldUpdateAvailability: Bool, metrics: FeatureAvailabilityMetrics, neverRemove: Bool) {
+internal struct FeatureAvailability<UserTypeValue: UserType> {
+  private let userDefaults: UserDefaults
+  private let metricsKey: String
+  private let availabilityKey: String
+  private let options: AvailabilityOptions
+  private let metrics: FeatureAvailabilityMetrics<UserTypeValue>
+
+  internal var value: Bool {
+    assert((userDefaults.object(forKey: availabilityKey) as? Bool) != nil)
+    return userDefaults.bool(forKey: availabilityKey)
+  }
+
+  private init(
+    userDefaults: UserDefaults,
+    metricsKey: String,
+    availabilityKey: String,
+    options: AvailabilityOptions,
+    metrics: FeatureAvailabilityMetrics<UserTypeValue>
+  ) {
     self.userDefaults = userDefaults
     self.metricsKey = metricsKey
     self.availabilityKey = availabilityKey
-    self.shouldUpdateAvailability = shouldUpdateAvailability
+    self.options = options
     self.metrics = metrics
-    self.neverRemove = neverRemove
   }
-  
-  
-  static let metricsKey = "AvailbilityMetrics"
-  static let isAvailableKey = "IsAvailable"
-  
-  
-  init (
-    userDefaults: UserDefaults = .standard,
+
+  internal init(
     key: String,
-    userType: UserType,
+    userType: UserTypeValue,
     probability: Double = 0.0,
-    shouldUpdateAvailability: Bool = true,
-    neverRemove : Bool = true
+    userDefaults: UserDefaults = .standard,
+    options: AvailabilityOptions = []
   ) {
-    let metricsKey = [FeatureFlags.rootKey, key, Self.metricsKey].joined(separator: ".")
-    let availabilityKey = [FeatureFlags.rootKey, key, Self.isAvailableKey].joined(separator: ".")
-    //    self.init(userDefaults: userDefaults, fullKey: fullKey, userType: userType, probability: probability)
-    self.init(userDefaults: userDefaults, metricsKey: metricsKey, availabilityKey: availabilityKey, shouldUpdateAvailability: shouldUpdateAvailability, metrics: .init(userType: userType, probability: probability), neverRemove: neverRemove)
-    self.initialize()
+    let metricsKey = [
+      FeatureFlags.rootKey, key, FeatureFlags.metricsKey
+    ].joined(separator: ".")
+    let availabilityKey = [
+      FeatureFlags.rootKey, key, FeatureFlags.isAvailableKey
+    ].joined(separator: ".")
+    self.init(
+      userDefaults: userDefaults,
+      metricsKey: metricsKey,
+      availabilityKey: availabilityKey,
+      options: options,
+      metrics: .init(userType: userType, probability: probability)
+    )
+    initialize()
   }
-  let userDefaults : UserDefaults
-  let metricsKey : String
-  let availabilityKey : String
-  let shouldUpdateAvailability: Bool
-  let neverRemove : Bool
-  let metrics : FeatureAvailabilityMetrics
-  
-  private func initializeMetrics () -> Bool {
-    guard shouldUpdateAvailability else {
+
+  private func initializeMetrics() -> Bool {
+    guard !options.contains(.disableUpdateAvailability) else {
       return false
     }
-    
-    if let oldMetrics : FeatureAvailabilityMetrics = self.userDefaults.metrics(forKey: self.metricsKey) {
+
+    if let oldMetrics: FeatureAvailabilityMetrics<UserTypeValue> =
+      self.userDefaults.metrics(forKey: self.metricsKey) {
       guard metrics != oldMetrics else {
         return false
       }
     }
-    
-    self.userDefaults.setValue(metrics, forKey: self.metricsKey)
+
+    userDefaults.set(metrics, forKey: metricsKey)
     return true
   }
-  
+
   private func initializeAvailability(force: Bool = false) {
-    let isAvailable = self.userDefaults.value(forKey: self.availabilityKey).map { _ in
-      self.userDefaults.bool(forKey: self.availabilityKey)
+    let isAvailable = userDefaults.object(forKey: availabilityKey).map { _ in
+      userDefaults.bool(forKey: availabilityKey)
     }
-    switch (isAvailable, force, neverRemove) {
-    case (true, _, true):
+    switch (isAvailable, force, options.contains(.allowOverwriteAvailable)) {
+    case (true, _, false):
       return
     case (.some(_), false, _):
       return
-      
+
     case (.none, _, _):
-    break
+      break
     case (_, true, _):
       break
     }
-    
-    
-    let value = self.metrics.calculateAvailability()
+
+    let value = metrics.calculateAvailability()
     print("Updating Availability: \(value)")
-    self.userDefaults.setValue(value, forKey: availabilityKey)
-    
+    userDefaults.set(value, forKey: availabilityKey)
   }
-  private func initialize () {
+
+  private func initialize() {
     // check for availablity
     let metricsHaveChanged = initializeMetrics()
     initializeAvailability(force: metricsHaveChanged)
-  }
-  
-  var value : Bool {
-    assert((self.userDefaults.value(forKey: self.availabilityKey) as? Bool) != nil)
-    return self.userDefaults.bool(forKey: self.availabilityKey)
   }
 }
