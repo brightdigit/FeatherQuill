@@ -2,8 +2,11 @@ name: FeatherQuill
 settings:
   LINT_MODE: ${LINT_MODE}
 packages:
-  StealthyStash:
+  FeatherQuill:
     path: .
+projectReferences:
+    Demo:
+      path: ./Demo/FeatureFlagsApp.xcodeproj
 aggregateTargets:
   Lint:
     buildScripts:

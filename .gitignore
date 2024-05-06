@@ -129,5 +129,4 @@ iOSInjectionProject/
 .mint
 Output
 
-# Due to support for 5.10 and below 
-Package.resolved
+!Demo/FeatureFlagsApp.xcodeproj
