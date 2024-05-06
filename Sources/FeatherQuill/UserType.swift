@@ -28,5 +28,6 @@
 //
 
 public protocol UserType: OptionSet where Self.RawValue: BinaryInteger {
+  static var `default`: Self { get }
   static func includes(_ userType: Self) -> Bool
 }

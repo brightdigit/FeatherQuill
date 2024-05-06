@@ -30,6 +30,23 @@
 #if canImport(SwiftUI)
   import SwiftUI
 
+  private enum FeatureFlagSuffixes {
+    static let values: [String] = [
+      "FeatureFlag",
+      "Feature"
+    ]
+    private static func dropCount(from typeName: String) -> Int? {
+      values.first(where: typeName.hasSuffix(_:)).map(\.count)
+    }
+
+    static func key(from typeName: String) -> String {
+      guard let dropCount = dropCount(from: typeName) else {
+        return typeName
+      }
+      return .init(typeName.dropLast(dropCount))
+    }
+  }
+
   public protocol FeatureFlag: EnvironmentKey
     where Value == Feature<ValueType, UserTypeValue> {
     associatedtype ValueType = Bool
@@ -43,20 +60,20 @@
   }
 
   extension FeatureFlag {
+    public static var typeName: String {
+      "\(Self.self)"
+    }
+
+    public static var audience: UserTypeValue {
+      .default
+    }
+
     public static var options: AvailabilityOptions {
       .default
     }
 
     public static var key: String {
-      let typeName = "\(Self.self)"
-      let dropCount = if typeName.hasSuffix("FeatureFlag") {
-        10
-      } else if typeName.hasSuffix("Feature") {
-        7
-      } else {
-        0
-      }
-      return .init(typeName.dropLast(dropCount))
+      FeatureFlagSuffixes.key(from: typeName)
     }
 
     public static var defaultValue: Feature<ValueType, UserTypeValue> {
