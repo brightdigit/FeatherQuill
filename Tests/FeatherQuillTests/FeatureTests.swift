@@ -31,19 +31,24 @@
 import XCTest
 
 final class FeatureTests: XCTestCase {
-  func testExample() throws {
-    let key = UUID().uuidString
-    let expectedValue = Int.random(in: 100 ... 1_000)
-    let feature = Feature(
-      key: key,
-      defaultValue: 0,
-      userType: AudienceType.default
-    )
-    let fullKey = [
-      FeatureFlags.rootKey, key, FeatureFlags.valueKey
-    ].joined(separator: ".")
-    feature.value.wrappedValue = expectedValue
-    let actualValue = UserDefaults.standard.integer(forKey: fullKey)
-    XCTAssertEqual(actualValue, expectedValue)
+  func testWrapped() throws {
+    #if canImport(SwiftUI)
+      let key = UUID().uuidString
+      let expectedValue = Int.random(in: 100 ... 1_000)
+      let feature = Feature(
+        key: key,
+        defaultValue: 0,
+        userType: AudienceType.default
+      )
+      let fullKey = [
+        FeatureFlags.rootKey, key, FeatureFlags.valueKey
+      ].joined(separator: ".")
+      feature.value.wrappedValue = expectedValue
+      let actualValue = UserDefaults.standard.integer(forKey: fullKey)
+      XCTAssertEqual(actualValue, expectedValue)
+    #else
+      throw XCTSkip("Not suported outside of SwiftUI.")
+
+    #endif
   }
 }

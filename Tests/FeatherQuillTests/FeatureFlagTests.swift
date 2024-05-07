@@ -30,13 +30,18 @@
 import XCTest
 
 final class FeatureFlagTests: XCTestCase {
-  func testMockFlag() {
-    let domain = Bundle.main.bundleIdentifier!
-    UserDefaults.standard.removePersistentDomain(forName: domain)
-    XCTAssertEqual(MockFeatureFlag.key, "Mock")
-    let defaultMock = MockFeatureFlag.defaultValue
-    XCTAssertEqual(
-      defaultMock.value.wrappedValue, MockFeatureFlag.initialValue
-    )
+  func testFlag() throws {
+    #if canImport(SwiftUI)
+      let domain = Bundle.main.bundleIdentifier!
+      UserDefaults.standard.removePersistentDomain(forName: domain)
+      XCTAssertEqual(MockFeatureFlag.key, "Mock")
+      let defaultMock = MockFeatureFlag.defaultValue
+      XCTAssertEqual(
+        defaultMock.value.wrappedValue, MockFeatureFlag.initialValue
+      )
+    #else
+      throw XCTSkip("Not suported outside of SwiftUI.")
+
+    #endif
   }
 }
