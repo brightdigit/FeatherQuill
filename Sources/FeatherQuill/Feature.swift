@@ -36,7 +36,11 @@
     private let featureValue: FeatureValue<ValueType>
     private let availability: FeatureAvailability<UserTypeValue>
 
-    public var value: Binding<ValueType> {
+    public var bindingValue: Binding<ValueType> {
+      featureValue.bindingValue
+    }
+
+    public var value: ValueType {
       featureValue.value
     }
 

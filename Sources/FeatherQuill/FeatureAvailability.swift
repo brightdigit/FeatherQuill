@@ -95,7 +95,10 @@ internal struct FeatureAvailability<UserTypeValue: UserType> {
     return true
   }
 
-  private func initializeAvailability(with audienceCallback: @Sendable @escaping (UserTypeValue) async -> Bool, force: Bool = false) {
+  private func initializeAvailability(
+    with audienceCallback: @Sendable @escaping (UserTypeValue) async -> Bool,
+    force: Bool = false
+  ) {
     let isAvailable = userDefaults.object(forKey: availabilityKey).map { _ in
       userDefaults.bool(forKey: availabilityKey)
     }

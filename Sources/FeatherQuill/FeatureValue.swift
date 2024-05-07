@@ -38,17 +38,27 @@
     private let key: String
     private let defaultValue: ValueType
     private let fullKey: String
-    public var value: Binding<ValueType> {
+    public var bindingValue: Binding<ValueType> {
       .init {
-        self._value
+        self._storedValue
       } set: { value in
-        self._value = value
+        self._storedValue = value
       }
     }
 
-    private var _value: ValueType {
+    public var value: ValueType {
+      let value = userDefaults.value(forKey: fullKey) as? ValueType
+      print("get \(_storedValue)", value)
+      assert(value != nil)
+      return value ?? _storedValue
+    }
+
+    private var _storedValue: ValueType {
       didSet {
-        userDefaults.setValue(_value, forKey: fullKey)
+        print("didSet \(_storedValue)")
+        userDefaults.setValue(_storedValue, forKey: fullKey)
+        userDefaults.synchronize()
+        print("set \(_storedValue)")
       }
     }
 
@@ -71,7 +81,7 @@
         userDefaults.setValue(defaultValue, forKey: fullKey)
         initialValue = defaultValue
       }
-      _value = initialValue
+      _storedValue = initialValue
     }
   }
 #endif
