@@ -30,8 +30,8 @@
 @testable import FeatherQuill
 import XCTest
 
-final class FeatureTests: XCTestCase {
-  func testWrapped() throws {
+internal final class FeatureTests: XCTestCase {
+  internal func testWrapped() throws {
     #if canImport(SwiftUI)
       let key = UUID().uuidString
       let expectedValue = Int.random(in: 100 ... 1_000)

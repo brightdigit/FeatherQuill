@@ -48,9 +48,11 @@
   }
 
   public protocol FeatureFlag: EnvironmentKey
-    where Value == Feature<ValueType, UserTypeValue> {
+    where Value == FeatherQuill.Feature<ValueType, UserTypeValue> {
     associatedtype ValueType = Bool
     associatedtype UserTypeValue: UserType
+
+    typealias Feature = FeatherQuill.Feature<ValueType, UserTypeValue>
 
     static var key: String { get }
     static var audience: UserTypeValue { get }
@@ -76,7 +78,7 @@
       FeatureFlagSuffixes.key(from: typeName)
     }
 
-    public static var defaultValue: Feature<ValueType, UserTypeValue> {
+    public static var defaultValue: FeatherQuill.Feature<ValueType, UserTypeValue> {
       .init(
         key: key,
         defaultValue: initialValue,

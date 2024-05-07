@@ -30,11 +30,11 @@
 #if canImport(SwiftUI)
   import FeatherQuill
 
-  struct MockFeatureFlag: FeatureFlag {
-    static let initialValue: Int = .random(in: 1_000 ... 9_999)
+  internal struct MockFeatureFlag: FeatureFlag {
+    internal typealias UserTypeValue = AudienceType
 
-    typealias UserTypeValue = AudienceType
+    internal static let initialValue: Int = .random(in: 1_000 ... 9_999)
 
-    static let probability: Double = .random(in: 0 ..< 1)
+    internal static let probability: Double = .random(in: 0 ..< 1)
   }
 #endif

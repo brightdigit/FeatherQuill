@@ -29,7 +29,7 @@
 
 import Foundation
 
-public struct AvailabilityOptions: OptionSet {
+public struct AvailabilityOptions: OptionSet, Sendable {
   public typealias RawValue = Int
 
   public static let `default`: AvailabilityOptions = .init()

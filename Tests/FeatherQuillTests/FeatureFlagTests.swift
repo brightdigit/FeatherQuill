@@ -29,9 +29,10 @@
 
 import XCTest
 
-final class FeatureFlagTests: XCTestCase {
-  func testFlag() throws {
+internal final class FeatureFlagTests: XCTestCase {
+  internal func testFlag() throws {
     #if canImport(SwiftUI)
+      // swiftlint:disable:next force_unwrapping
       let domain = Bundle.main.bundleIdentifier!
       UserDefaults.standard.removePersistentDomain(forName: domain)
       XCTAssertEqual(MockFeatureFlag.key, "Mock")
