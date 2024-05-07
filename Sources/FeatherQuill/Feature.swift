@@ -33,11 +33,11 @@
 
   @Observable
   public class Feature<ValueType, UserTypeValue: UserType> {
-    private let value: FeatureValue<ValueType>
+    private let featureValue: FeatureValue<ValueType>
     private let availability: FeatureAvailability<UserTypeValue>
 
-    public var isEnabled: Binding<ValueType> {
-      value.isEnabled
+    public var value: Binding<ValueType> {
+      featureValue.value
     }
 
     public var isAvailable: Bool {
@@ -48,7 +48,7 @@
       value: FeatureValue<ValueType>,
       availability: FeatureAvailability<UserTypeValue>
     ) {
-      self.value = value
+      featureValue = value
       self.availability = availability
     }
   }

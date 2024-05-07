@@ -114,5 +114,6 @@ excluded:
   - DerivedData
   - .build
   - .swiftpm
+  - Demo
 indentation_width:
   indentation_width: 2

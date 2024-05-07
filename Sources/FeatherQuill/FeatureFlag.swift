@@ -60,7 +60,7 @@
   }
 
   extension FeatureFlag {
-    public static var typeName: String {
+    private static var typeName: String {
       "\(Self.self)"
     }
 

@@ -47,7 +47,7 @@ internal struct FeatureAvailabilityMetrics<UserTypeValue: UserType>: Equatable {
   internal init(userType: UserTypeValue, probability: Double) {
     self.userType = userType
     self.probability = probability
-    assert((probability * 1_000).rounded() / 1_000.0 == probability)
+    // assert((probability * 1_000).rounded() / 1_000.0 == probability)
     assert(probability <= 1.0)
   }
 

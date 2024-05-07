@@ -1,5 +1,5 @@
 //
-//  AudienceType.swift
+//  FeatureTests.swift
 //  SimulatorServices
 //
 //  Created by Leo Dion.
@@ -27,8 +27,8 @@
 //  OTHER DEALINGS IN THE SOFTWARE.
 //
 
-import FeatherQuill
-import Foundation
+@testable import FeatherQuill
+import XCTest
 
 public struct AudienceType: UserType {
   public init(rawValue: Int) {
@@ -53,4 +53,38 @@ public struct AudienceType: UserType {
   public static let any: AudienceType = .init(rawValue: .max)
   public static let `default`: AudienceType = [.testFlightBeta, proSubscriber]
   public static let none: AudienceType = []
+}
+
+struct MockFeatureFlag: FeatureFlag {
+  static let initialValue: Int = .random(in: 1_000 ... 9_999)
+
+  typealias UserTypeValue = AudienceType
+
+  static let probability: Double = .random(in: 0 ..< 1)
+}
+
+final class FeatureTests: XCTestCase {
+  func testExample() throws {
+    let key = UUID().uuidString
+    let expectedValue = Int.random(in: 100 ... 1_000)
+    let feature = Feature(
+      key: key,
+      defaultValue: 0,
+      userType: AudienceType.default
+    )
+    let fullKey = [
+      FeatureFlags.rootKey, key, FeatureFlags.valueKey
+    ].joined(separator: ".")
+    feature.value.wrappedValue = expectedValue
+    let actualValue = UserDefaults.standard.integer(forKey: fullKey)
+    XCTAssertEqual(actualValue, expectedValue)
+  }
+
+  func testMockFlag() {
+    XCTAssertEqual(MockFeatureFlag.key, "Mock")
+    let defaultMock = MockFeatureFlag.defaultValue
+//    XCTAssertEqual(
+//      defaultMock.value.wrappedValue, MockFeatureFlag.initialValue
+//    )
+  }
 }

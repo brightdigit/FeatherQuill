@@ -38,7 +38,7 @@
     private let key: String
     private let defaultValue: ValueType
     private let fullKey: String
-    public var isEnabled: Binding<ValueType> {
+    public var value: Binding<ValueType> {
       .init {
         self._isEnabled
       } set: { value in
@@ -68,7 +68,6 @@
       if let currentValue = userDefaults.value(forKey: fullKey) as? ValueType {
         initialValue = currentValue
       } else {
-        print("Setting Default Value")
         userDefaults.setValue(defaultValue, forKey: fullKey)
         initialValue = defaultValue
       }
