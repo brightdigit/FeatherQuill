@@ -43,6 +43,11 @@ internal struct FeatureAvailabilityMetrics<UserTypeValue: UserType>: Equatable, 
     let probability = (value - rawValueDouble)
     self.init(userType: .init(rawValue: rawValue), probability: probability)
   }
+  
+  static internal func roundProbability (_ value: Double) -> Double {
+    assert(value <= 1.0)
+    return ((value) * 1_000).rounded() / 1_000.0
+  }
 
   internal init(userType: UserTypeValue, probability: Double) {
     self.userType = userType
