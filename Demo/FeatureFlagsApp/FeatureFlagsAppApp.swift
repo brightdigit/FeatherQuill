@@ -1,6 +1,6 @@
 //
 //  FeatureFlagsAppApp.swift
-//  SimulatorServices
+//  FeatherQuill
 //
 //  Created by Leo Dion.
 //  Copyright © 2024 BrightDigit.

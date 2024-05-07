@@ -1,6 +1,6 @@
 //
 //  FeatureAvailability.swift
-//  SimulatorServices
+//  FeatherQuill
 //
 //  Created by Leo Dion.
 //  Copyright © 2024 BrightDigit.
@@ -101,7 +101,7 @@ internal struct FeatureAvailability<UserTypeValue: UserType> {
     switch (isAvailable, force, options.contains(.allowOverwriteAvailable)) {
     case (true, _, false):
       return
-    case (.some(_), false, _):
+    case (.some, false, _):
       return
 
     case (.none, _, _):
