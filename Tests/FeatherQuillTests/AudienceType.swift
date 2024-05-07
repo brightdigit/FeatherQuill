@@ -1,5 +1,5 @@
 //
-//  FeatureTests.swift
+//  AudienceType.swift
 //  SimulatorServices
 //
 //  Created by Leo Dion.
@@ -27,23 +27,28 @@
 //  OTHER DEALINGS IN THE SOFTWARE.
 //
 
-@testable import FeatherQuill
-import XCTest
+import FeatherQuill
 
-final class FeatureTests: XCTestCase {
-  func testExample() throws {
-    let key = UUID().uuidString
-    let expectedValue = Int.random(in: 100 ... 1_000)
-    let feature = Feature(
-      key: key,
-      defaultValue: 0,
-      userType: AudienceType.default
-    )
-    let fullKey = [
-      FeatureFlags.rootKey, key, FeatureFlags.valueKey
-    ].joined(separator: ".")
-    feature.value.wrappedValue = expectedValue
-    let actualValue = UserDefaults.standard.integer(forKey: fullKey)
-    XCTAssertEqual(actualValue, expectedValue)
+public struct AudienceType: UserType {
+  public init(rawValue: Int) {
+    self.rawValue = rawValue
   }
+
+  public static func includes(_ value: AudienceType) -> Bool {
+    guard value.rawValue > 0 else {
+      return false
+    }
+    let value: Bool = .random()
+    return value
+  }
+
+  public var rawValue: Int
+
+  public typealias RawValue = Int
+
+  public static let proSubscriber: AudienceType = .init(rawValue: 1)
+  public static let testFlightBeta: AudienceType = .init(rawValue: 2)
+  public static let any: AudienceType = .init(rawValue: .max)
+  public static let `default`: AudienceType = [.testFlightBeta, proSubscriber]
+  public static let none: AudienceType = []
 }

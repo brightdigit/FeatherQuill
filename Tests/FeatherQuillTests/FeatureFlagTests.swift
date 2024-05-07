@@ -1,5 +1,5 @@
 //
-//  FeatherQuillTests.swift
+//  FeatureFlagTests.swift
 //  SimulatorServices
 //
 //  Created by Leo Dion.
@@ -27,15 +27,16 @@
 //  OTHER DEALINGS IN THE SOFTWARE.
 //
 
-@testable import FeatherQuill
 import XCTest
 
-final class FeatherQuillTests: XCTestCase {
-  func testExample() throws {
-    // XCTest Documentation
-    // https://developer.apple.com/documentation/xctest
-
-    // Defining Test Cases and Test Methods
-    // https://developer.apple.com/documentation/xctest/defining_test_cases_and_test_methods
+final class FeatureFlagTests: XCTestCase {
+  func testMockFlag() {
+    let domain = Bundle.main.bundleIdentifier!
+    UserDefaults.standard.removePersistentDomain(forName: domain)
+    XCTAssertEqual(MockFeatureFlag.key, "Mock")
+    let defaultMock = MockFeatureFlag.defaultValue
+    XCTAssertEqual(
+      defaultMock.value.wrappedValue, MockFeatureFlag.initialValue
+    )
   }
 }

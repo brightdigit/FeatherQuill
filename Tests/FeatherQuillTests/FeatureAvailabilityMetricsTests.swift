@@ -1,5 +1,5 @@
 //
-//  FeatureTests.swift
+//  FeatureAvailabilityMetricsTests.swift
 //  SimulatorServices
 //
 //  Created by Leo Dion.
@@ -30,20 +30,12 @@
 @testable import FeatherQuill
 import XCTest
 
-final class FeatureTests: XCTestCase {
-  func testExample() throws {
-    let key = UUID().uuidString
-    let expectedValue = Int.random(in: 100 ... 1_000)
-    let feature = Feature(
-      key: key,
-      defaultValue: 0,
-      userType: AudienceType.default
-    )
-    let fullKey = [
-      FeatureFlags.rootKey, key, FeatureFlags.valueKey
-    ].joined(separator: ".")
-    feature.value.wrappedValue = expectedValue
-    let actualValue = UserDefaults.standard.integer(forKey: fullKey)
-    XCTAssertEqual(actualValue, expectedValue)
+final class FeatureAvailabilityMetricsTests: XCTestCase {
+  func testUserDefaultsMetrics() {
+    let expected = FeatureAvailabilityMetrics(userType: AudienceType.proSubscriber, probability: .random(in: 0 ..< 1))
+    UserDefaults.standard.set(expected, forKey: "testMetrics")
+    let actual: FeatureAvailabilityMetrics<AudienceType>? = UserDefaults.standard.metrics(forKey: "testMetrics")
+
+    XCTAssertEqual(expected, actual)
   }
 }

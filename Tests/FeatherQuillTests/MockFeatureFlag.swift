@@ -1,5 +1,5 @@
 //
-//  FeatureTests.swift
+//  MockFeatureFlag.swift
 //  SimulatorServices
 //
 //  Created by Leo Dion.
@@ -27,23 +27,12 @@
 //  OTHER DEALINGS IN THE SOFTWARE.
 //
 
-@testable import FeatherQuill
-import XCTest
+import FeatherQuill
 
-final class FeatureTests: XCTestCase {
-  func testExample() throws {
-    let key = UUID().uuidString
-    let expectedValue = Int.random(in: 100 ... 1_000)
-    let feature = Feature(
-      key: key,
-      defaultValue: 0,
-      userType: AudienceType.default
-    )
-    let fullKey = [
-      FeatureFlags.rootKey, key, FeatureFlags.valueKey
-    ].joined(separator: ".")
-    feature.value.wrappedValue = expectedValue
-    let actualValue = UserDefaults.standard.integer(forKey: fullKey)
-    XCTAssertEqual(actualValue, expectedValue)
-  }
+struct MockFeatureFlag: FeatureFlag {
+  static let initialValue: Int = .random(in: 1_000 ... 9_999)
+
+  typealias UserTypeValue = AudienceType
+
+  static let probability: Double = .random(in: 0 ..< 1)
 }

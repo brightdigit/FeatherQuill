@@ -111,12 +111,10 @@ internal struct FeatureAvailability<UserTypeValue: UserType> {
     }
 
     let value = metrics.calculateAvailability()
-    print("Updating Availability: \(value)")
     userDefaults.set(value, forKey: availabilityKey)
   }
 
   private func initialize() {
-    // check for availablity
     let metricsHaveChanged = initializeMetrics()
     initializeAvailability(force: metricsHaveChanged)
   }
