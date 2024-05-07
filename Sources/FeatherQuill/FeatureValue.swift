@@ -40,15 +40,15 @@
     private let fullKey: String
     public var value: Binding<ValueType> {
       .init {
-        self._isEnabled
+        self._value
       } set: { value in
-        self._isEnabled = value
+        self._value = value
       }
     }
 
-    private var _isEnabled: ValueType {
+    private var _value: ValueType {
       didSet {
-        userDefaults.setValue(_isEnabled, forKey: fullKey)
+        userDefaults.setValue(_value, forKey: fullKey)
       }
     }
 
@@ -71,7 +71,7 @@
         userDefaults.setValue(defaultValue, forKey: fullKey)
         initialValue = defaultValue
       }
-      _isEnabled = initialValue
+      _value = initialValue
     }
   }
 #endif

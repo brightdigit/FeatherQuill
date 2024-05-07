@@ -79,12 +79,22 @@ final class FeatureTests: XCTestCase {
     let actualValue = UserDefaults.standard.integer(forKey: fullKey)
     XCTAssertEqual(actualValue, expectedValue)
   }
+  
+  func testUserDefaultsMetrics() {
+    let expected = FeatureAvailabilityMetrics(userType: AudienceType.proSubscriber, probability: .random(in: 0..<1))
+    UserDefaults.standard.set(expected, forKey: "testMetrics")
+    let actual : FeatureAvailabilityMetrics<AudienceType>? = UserDefaults.standard.metrics(forKey: "testMetrics")
+    
+    XCTAssertEqual(expected, actual)
+  }
 
   func testMockFlag() {
+    let domain = Bundle.main.bundleIdentifier!
+    UserDefaults.standard.removePersistentDomain(forName: domain)
     XCTAssertEqual(MockFeatureFlag.key, "Mock")
     let defaultMock = MockFeatureFlag.defaultValue
-//    XCTAssertEqual(
-//      defaultMock.value.wrappedValue, MockFeatureFlag.initialValue
-//    )
+        XCTAssertEqual(
+          defaultMock.value.wrappedValue, MockFeatureFlag.initialValue
+        )
   }
 }

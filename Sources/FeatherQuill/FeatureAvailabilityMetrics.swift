@@ -34,21 +34,24 @@ internal struct FeatureAvailabilityMetrics<UserTypeValue: UserType>: Equatable {
   private let probability: Double
 
   fileprivate var value: Double {
-    Double(userType.rawValue) + probability.remainder(dividingBy: 1)
+    Double(userType.rawValue) + probability.truncatingRemainder(dividingBy: 1)
   }
 
   fileprivate init(value: Double) {
     let rawValueDouble = floor(value)
     let rawValue = UserTypeValue.RawValue(rawValueDouble)
-    let probability = ((value - rawValueDouble) * 1_000).rounded() / 1_000.0
+    let probability = (value - rawValueDouble)
     self.init(userType: .init(rawValue: rawValue), probability: probability)
+  }
+  
+  static internal func roundProbability (_ value: Double) -> Double {
+    assert(value <= 1.0)
+    return ((value) * 1_000).rounded() / 1_000.0
   }
 
   internal init(userType: UserTypeValue, probability: Double) {
     self.userType = userType
-    self.probability = probability
-    // assert((probability * 1_000).rounded() / 1_000.0 == probability)
-    assert(probability <= 1.0)
+    self.probability = Self.roundProbability(probability)
   }
 
   internal func calculateAvailability() -> Bool {
