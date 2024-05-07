@@ -59,14 +59,16 @@
       defaultValue: ValueType,
       userType: UserTypeValue,
       probability: Double = 0.0,
-      options: AvailabilityOptions = []
+      options: AvailabilityOptions = [],
+      _ audienceCallback: @Sendable @escaping (UserTypeValue) async -> Bool
     ) {
       let value: FeatureValue<ValueType> = .init(key: key, defaultValue: defaultValue)
       let availablity: FeatureAvailability = .init(
         key: key,
         userType: userType,
         probability: probability,
-        options: options
+        options: options,
+        audienceCallback
       )
       self.init(value: value, availability: availablity)
     }

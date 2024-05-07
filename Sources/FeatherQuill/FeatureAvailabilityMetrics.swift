@@ -54,9 +54,9 @@ internal struct FeatureAvailabilityMetrics<UserTypeValue: UserType>: Equatable {
     return (value * 1_000).rounded() / 1_000.0
   }
 
-  internal func calculateAvailability() -> Bool {
+  internal func calculateAvailability(_ audienceCallback: @Sendable @escaping (UserTypeValue) async -> Bool) async -> Bool {
     let value: Bool
-    if UserTypeValue.includes(userType) {
+    if await audienceCallback(userType) {
       value = true
     } else {
       let randomValue: Double = .random(in: 0.0 ..< 1.0)

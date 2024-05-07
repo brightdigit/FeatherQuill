@@ -59,6 +59,9 @@
     static var probability: Double { get }
     static var initialValue: ValueType { get }
     static var options: AvailabilityOptions { get }
+
+    @Sendable
+    static func audienceCallback(_ userType: UserTypeValue) async -> Bool
   }
 
   extension FeatureFlag {
@@ -83,7 +86,8 @@
         key: key,
         defaultValue: initialValue,
         userType: audience,
-        probability: probability
+        probability: probability,
+        audienceCallback
       )
     }
   }

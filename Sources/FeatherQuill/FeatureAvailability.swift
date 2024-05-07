@@ -60,7 +60,8 @@ internal struct FeatureAvailability<UserTypeValue: UserType> {
     userType: UserTypeValue,
     probability: Double = 0.0,
     userDefaults: UserDefaults = .standard,
-    options: AvailabilityOptions = []
+    options: AvailabilityOptions = [],
+    _ availability: @Sendable @escaping (UserTypeValue) async -> Bool
   ) {
     let metricsKey = [
       FeatureFlags.rootKey, key, FeatureFlags.metricsKey
@@ -75,7 +76,7 @@ internal struct FeatureAvailability<UserTypeValue: UserType> {
       options: options,
       metrics: .init(userType: userType, probability: probability)
     )
-    initialize()
+    initialize(with: availability)
   }
 
   private func initializeMetrics() -> Bool {
@@ -94,7 +95,7 @@ internal struct FeatureAvailability<UserTypeValue: UserType> {
     return true
   }
 
-  private func initializeAvailability(force: Bool = false) {
+  private func initializeAvailability(with audienceCallback: @Sendable @escaping (UserTypeValue) async -> Bool, force: Bool = false) {
     let isAvailable = userDefaults.object(forKey: availabilityKey).map { _ in
       userDefaults.bool(forKey: availabilityKey)
     }
@@ -110,12 +111,14 @@ internal struct FeatureAvailability<UserTypeValue: UserType> {
       break
     }
 
-    let value = metrics.calculateAvailability()
-    userDefaults.set(value, forKey: availabilityKey)
+    Task {
+      let value = await metrics.calculateAvailability(audienceCallback)
+      userDefaults.set(value, forKey: availabilityKey)
+    }
   }
 
-  private func initialize() {
+  private func initialize(with audienceCallback: @Sendable @escaping (UserTypeValue) async -> Bool) {
     let metricsHaveChanged = initializeMetrics()
-    initializeAvailability(force: metricsHaveChanged)
+    initializeAvailability(with: audienceCallback, force: metricsHaveChanged)
   }
 }
