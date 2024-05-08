@@ -36,5 +36,9 @@
     internal static let initialValue: Int = .random(in: 1_000 ... 9_999)
 
     internal static let probability: Double = .random(in: 0 ..< 1)
+
+    internal static func audienceCallback(_: AudienceType) async -> Bool {
+      true
+    }
   }
 #endif

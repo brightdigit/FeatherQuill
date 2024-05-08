@@ -38,7 +38,7 @@ internal final class FeatureFlagTests: XCTestCase {
       XCTAssertEqual(MockFeatureFlag.key, "Mock")
       let defaultMock = MockFeatureFlag.defaultValue
       XCTAssertEqual(
-        defaultMock.value.wrappedValue, MockFeatureFlag.initialValue
+        defaultMock.value, MockFeatureFlag.initialValue
       )
     #else
       throw XCTSkip("Not suported outside of SwiftUI.")

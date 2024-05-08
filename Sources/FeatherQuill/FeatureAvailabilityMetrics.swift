@@ -29,7 +29,7 @@
 
 import Foundation
 
-internal struct FeatureAvailabilityMetrics<UserTypeValue: UserType>: Equatable {
+internal struct FeatureAvailabilityMetrics<UserTypeValue: UserType>: Equatable, Sendable {
   private let userType: UserTypeValue
   private let probability: Double
 

@@ -29,7 +29,7 @@
 
 import Foundation
 
-internal struct FeatureAvailability<UserTypeValue: UserType> {
+internal struct FeatureAvailability<UserTypeValue: UserType>: Sendable {
   private let userDefaults: UserDefaults
   private let metricsKey: String
   private let availabilityKey: String
@@ -125,3 +125,5 @@ internal struct FeatureAvailability<UserTypeValue: UserType> {
     initializeAvailability(with: audienceCallback, force: metricsHaveChanged)
   }
 }
+
+extension UserDefaults: @unchecked Sendable {}

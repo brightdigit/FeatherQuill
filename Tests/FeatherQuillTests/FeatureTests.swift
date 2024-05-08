@@ -39,11 +39,12 @@ internal final class FeatureTests: XCTestCase {
         key: key,
         defaultValue: 0,
         userType: AudienceType.default
-      )
+      ) { _ in true }
+
       let fullKey = [
         FeatureFlags.rootKey, key, FeatureFlags.valueKey
       ].joined(separator: ".")
-      feature.value.wrappedValue = expectedValue
+      feature.bindingValue.wrappedValue = expectedValue
       let actualValue = UserDefaults.standard.integer(forKey: fullKey)
       XCTAssertEqual(actualValue, expectedValue)
     #else

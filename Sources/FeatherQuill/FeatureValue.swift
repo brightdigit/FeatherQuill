@@ -48,7 +48,6 @@
 
     public var value: ValueType {
       let value = userDefaults.value(forKey: fullKey) as? ValueType
-      print("get \(_storedValue)", value)
       assert(value != nil)
       return value ?? _storedValue
     }
