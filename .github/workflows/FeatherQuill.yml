@@ -135,7 +135,7 @@ jobs:
       - name: Build
         run: swift build
       - name: Run Swift Package tests
-        run: swift test --enable-code-coverage
+        run: swift test #--enable-code-coverage
       # - uses: sersoft-gmbh/swift-coverage-action@v4
       #   id: coverage-files-spm
       #   with:
