@@ -74,18 +74,18 @@ jobs:
     strategy:
       matrix:
         include:
-          # - xcode: "/Applications/Xcode_15.0.1.app"
-          #   os: macos-13
-          #   iOSVersion: "17.0.1"
-          #   watchOSVersion: "10.0"
-          #   watchName: "Apple Watch Series 9 (41mm)"
-          #   iPhoneName: "iPhone 15"
-          # - xcode: "/Applications/Xcode_15.1.app"
-          #   os: macos-13
-          #   iOSVersion: "17.2"
-          #   watchOSVersion: "10.2"
-          #   watchName: "Apple Watch Series 9 (45mm)"
-          #   iPhoneName: "iPhone 15 Plus"
+          - xcode: "/Applications/Xcode_15.0.1.app"
+            os: macos-13
+            iOSVersion: "17.0.1"
+            watchOSVersion: "10.0"
+            watchName: "Apple Watch Series 9 (41mm)"
+            iPhoneName: "iPhone 15"
+          - xcode: "/Applications/Xcode_15.1.app"
+            os: macos-13
+            iOSVersion: "17.2"
+            watchOSVersion: "10.2"
+            watchName: "Apple Watch Series 9 (45mm)"
+            iPhoneName: "iPhone 15 Plus"
           - xcode: "/Applications/Xcode_15.2.app"
             os: macos-14
             iOSVersion: "17.2"
