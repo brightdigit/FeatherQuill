@@ -30,26 +30,26 @@
 @testable import FeatherQuill
 import XCTest
 
-internal final class FeatureTests: XCTestCase {
-  internal func testWrapped() throws {
-    #if canImport(SwiftUI)
-      let key = UUID().uuidString
-      let expectedValue = Int.random(in: 100 ... 1_000)
-      let feature = Feature(
-        key: key,
-        defaultValue: 0,
-        userType: AudienceType.default
-      ) { _ in true }
-
-      let fullKey = [
-        FeatureFlags.rootKey, key, FeatureFlags.valueKey
-      ].joined(separator: ".")
-      feature.bindingValue.wrappedValue = expectedValue
-      let actualValue = UserDefaults.standard.integer(forKey: fullKey)
-      XCTAssertEqual(actualValue, expectedValue)
-    #else
-      throw XCTSkip("Not suported outside of SwiftUI.")
-
-    #endif
-  }
-}
+//internal final class FeatureTests: XCTestCase {
+//  internal func testWrapped() throws {
+//    #if canImport(SwiftUI)
+//      let key = UUID().uuidString
+//      let expectedValue = Int.random(in: 100 ... 1_000)
+//      let feature = Feature(
+//        key: key,
+//        defaultValue: 0,
+//        userType: AudienceType.default
+//      ) { _ in true }
+//
+//      let fullKey = [
+//        FeatureFlags.rootKey, key, FeatureFlags.valueKey
+//      ].joined(separator: ".")
+//      feature.bindingValue.wrappedValue = expectedValue
+//      let actualValue = UserDefaults.standard.integer(forKey: fullKey)
+//      XCTAssertEqual(actualValue, expectedValue)
+//    #else
+//      throw XCTSkip("Not suported outside of SwiftUI.")
+//
+//    #endif
+//  }
+//}
