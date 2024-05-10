@@ -32,20 +32,19 @@
   import SwiftUI
 
   @Observable
+  /// Set of values for the Feature.
   public class Feature<ValueType, UserTypeValue: UserType> {
     private let featureValue: FeatureValue<ValueType>
     private let availability: FeatureAvailability<UserTypeValue>
 
+    /// Binding value to use for SwiftUI Views.
     public var bindingValue: Binding<ValueType> {
       featureValue.bindingValue
     }
 
+    /// Value of the Feature.
     public var value: ValueType {
       featureValue.value
-    }
-
-    public var isAvailable: Bool {
-      availability.value
     }
 
     fileprivate init(
@@ -58,7 +57,7 @@
   }
 
   extension Feature {
-    public convenience init(
+    internal convenience init(
       key: String,
       defaultValue: ValueType,
       userType: UserTypeValue,

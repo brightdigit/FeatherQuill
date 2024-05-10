@@ -33,11 +33,11 @@
   import SwiftUI
 
   @Observable
-  public class FeatureValue<ValueType> {
+  internal class FeatureValue<ValueType> {
     private let userDefaults: UserDefaults
     private let key: String
     private let fullKey: String
-    public var bindingValue: Binding<ValueType> {
+    internal var bindingValue: Binding<ValueType> {
       .init {
         self._storedValue
       } set: { value in
@@ -45,7 +45,7 @@
       }
     }
 
-    public var value: ValueType {
+    internal var value: ValueType {
       let value = userDefaults.value(forKey: fullKey) as? ValueType
       assert(value != nil)
       return value ?? _storedValue

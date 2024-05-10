@@ -69,18 +69,22 @@
       "\(Self.self)"
     }
 
+    /// Matching user for ``FeatureFlag
     public static var audience: UserTypeValue {
       .default
     }
 
+    /// Behavior options on how to handle changes.
     public static var options: AvailabilityOptions {
       .default
     }
 
+    /// The key the ``FeatureFlag``.
     public static var key: String {
       FeatureFlagSuffixes.key(from: typeName)
     }
 
+    /// The default value for the environment key.
     public static var defaultValue: FeatherQuill.Feature<ValueType, UserTypeValue> {
       .init(
         key: key,
