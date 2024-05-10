@@ -33,6 +33,7 @@
 
   /// Set of values for the Feature.
   @Observable
+  /// Set of values for the Feature.
   public class Feature<ValueType, UserTypeValue: UserType> {
     private let featureValue: FeatureValue<ValueType>
     private let availability: FeatureAvailability<UserTypeValue>
