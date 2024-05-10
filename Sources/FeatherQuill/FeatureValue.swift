@@ -36,7 +36,6 @@
   public class FeatureValue<ValueType> {
     private let userDefaults: UserDefaults
     private let key: String
-    private let defaultValue: ValueType
     private let fullKey: String
     public var bindingValue: Binding<ValueType> {
       .init {
@@ -68,7 +67,6 @@
     ) {
       self.userDefaults = userDefaults
       self.key = key
-      self.defaultValue = defaultValue
       let initialValue: ValueType
       let fullKey = [
         FeatureFlags.rootKey, self.key, FeatureFlags.valueKey
