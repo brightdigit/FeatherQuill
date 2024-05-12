@@ -61,7 +61,7 @@
     static var options: AvailabilityOptions { get }
 
     @Sendable
-    static func audienceCallback(_ userType: UserTypeValue) async -> Bool
+    static func evaluateUser(_ userType: UserTypeValue) async -> Bool
   }
 
   extension FeatureFlag {
@@ -91,7 +91,7 @@
         defaultValue: initialValue,
         userType: audience,
         probability: probability,
-        audienceCallback
+        evaluateUser
       )
     }
   }

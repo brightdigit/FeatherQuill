@@ -29,6 +29,4 @@
 
 public protocol UserType: OptionSet, Sendable where Self.RawValue: BinaryInteger {
   static var `default`: Self { get }
-  @available(*, deprecated)
-  static func includes(_ userType: Self) -> Bool
 }
