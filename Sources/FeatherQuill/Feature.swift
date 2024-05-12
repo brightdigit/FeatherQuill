@@ -47,6 +47,11 @@
       featureValue.value
     }
 
+    /// Whether the feature is available to the user
+    public var isAvailable: Bool {
+      availability.value
+    }
+
     fileprivate init(
       value: FeatureValue<ValueType>,
       availability: FeatureAvailability<UserTypeValue>
