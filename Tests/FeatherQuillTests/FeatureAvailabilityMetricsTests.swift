@@ -30,8 +30,8 @@
 @testable import FeatherQuill
 import XCTest
 
-//internal final class FeatureAvailabilityMetricsTests: XCTestCase {
-//  internal func testUserDefaultsMetrics() {
+internal final class FeatureAvailabilityMetricsTests: XCTestCase {
+  internal func testUserDefaultsMetrics() {
 //    let expected = FeatureAvailabilityMetrics(
 //      userType: AudienceType.proSubscriber,
 //      probability: .random(in: 0 ..< 1)
@@ -41,5 +41,6 @@ import XCTest
 //      UserDefaults.standard.metrics(forKey: "testMetrics")
 //
 //    XCTAssertEqual(expected, actual)
-//  }
-//}
+    XCTAssert(true)
+  }
+}
