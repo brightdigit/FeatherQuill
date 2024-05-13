@@ -36,6 +36,15 @@ struct NewDesignFeature: FeatureFlag {
 
   static let probability: Double = 0.5
   static let initialValue = false
+
+  static func evaluateUser(_ userType: AudienceType) async -> Bool {
+    guard userType.rawValue > 0 else {
+      return false
+    }
+    let value: Bool = .random()
+    print("User Matches: \(value)")
+    return value
+  }
 }
 
 extension EnvironmentValues {

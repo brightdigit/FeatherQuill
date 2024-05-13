@@ -35,15 +35,6 @@ public struct AudienceType: UserType {
     self.rawValue = rawValue
   }
 
-  public static func includes(_ value: AudienceType) -> Bool {
-    guard value.rawValue > 0 else {
-      return false
-    }
-    let value: Bool = .random()
-    print("User Matches: \(value)")
-    return value
-  }
-
   public var rawValue: Int
 
   public typealias RawValue = Int

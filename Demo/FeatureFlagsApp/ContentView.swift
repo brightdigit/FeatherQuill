@@ -39,7 +39,7 @@ struct ContentView: View {
         .foregroundStyle(.tint)
       Text("Hello, world!")
 
-      Toggle("Is Enabled", isOn: newDesign.value)
+      Toggle("Is Enabled", isOn: newDesign.bindingValue)
         .disabled(!newDesign.isAvailable)
         .opacity(newDesign.isAvailable ? 1.0 : 0.5)
     }
