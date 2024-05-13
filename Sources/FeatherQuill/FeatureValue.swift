@@ -53,10 +53,8 @@
 
     private var _storedValue: ValueType {
       didSet {
-        print("didSet \(_storedValue)")
         userDefaults.setValue(_storedValue, forKey: fullKey)
         userDefaults.synchronize()
-        print("set \(_storedValue)")
       }
     }
 
