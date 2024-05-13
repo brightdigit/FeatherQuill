@@ -27,7 +27,7 @@
 //  OTHER DEALINGS IN THE SOFTWARE.
 //
 
-@testable import FeatherQuill
+import FeatherQuill
 import XCTest
 
 internal final class FeatureAvailabilityMetricsTests: XCTestCase {
