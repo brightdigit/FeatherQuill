@@ -27,18 +27,18 @@
 //  OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#if canImport(SwiftUI)
-  import FeatherQuill
-
-  internal struct MockFeatureFlag: FeatureFlag {
-    internal typealias UserTypeValue = AudienceType
-
-    internal static let initialValue: Int = .random(in: 1_000 ... 9_999)
-
-    internal static let probability: Double = .random(in: 0 ..< 1)
-
-    internal static func evaluateUser(_: AudienceType) async -> Bool {
-      true
-    }
-  }
-#endif
+//#if canImport(SwiftUI)
+//  import FeatherQuill
+//
+//  internal struct MockFeatureFlag: FeatureFlag {
+//    internal typealias UserTypeValue = AudienceType
+//
+//    internal static let initialValue: Int = .random(in: 1_000 ... 9_999)
+//
+//    internal static let probability: Double = .random(in: 0 ..< 1)
+//
+//    internal static func evaluateUser(_: AudienceType) async -> Bool {
+//      true
+//    }
+//  }
+//#endif
