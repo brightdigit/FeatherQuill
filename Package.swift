@@ -23,14 +23,14 @@ let package = Package(
     .target(
       name: "FeatherQuill",
       swiftSettings: [
-        SwiftSetting.enableUpcomingFeature("BareSlashRegexLiterals"),
-        SwiftSetting.enableUpcomingFeature("ConciseMagicFile"),
-        SwiftSetting.enableUpcomingFeature("ExistentialAny"),
-        SwiftSetting.enableUpcomingFeature("ForwardTrailingClosures"),
-        SwiftSetting.enableUpcomingFeature("ImplicitOpenExistentials"),
-        SwiftSetting.enableUpcomingFeature("DisableOutwardActorInference"),
-        SwiftSetting.enableExperimentalFeature("StrictConcurrency"),
-        SwiftSetting.unsafeFlags(["-warn-concurrency", "-enable-actor-data-race-checks"])
+//        SwiftSetting.enableUpcomingFeature("BareSlashRegexLiterals"),
+//        SwiftSetting.enableUpcomingFeature("ConciseMagicFile"),
+//        SwiftSetting.enableUpcomingFeature("ExistentialAny"),
+//        SwiftSetting.enableUpcomingFeature("ForwardTrailingClosures"),
+//        SwiftSetting.enableUpcomingFeature("ImplicitOpenExistentials"),
+//        SwiftSetting.enableUpcomingFeature("DisableOutwardActorInference"),
+//        SwiftSetting.enableExperimentalFeature("StrictConcurrency"),
+//        SwiftSetting.unsafeFlags(["-warn-concurrency", "-enable-actor-data-race-checks"])
       ]
     ),
     .testTarget(
