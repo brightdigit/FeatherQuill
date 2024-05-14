@@ -26,6 +26,7 @@ FeatherQuill is a Swift package that provides a mechanism for implementing offli
 * **Offline Support:** Feature flags are stored locally on the device, so they can be used even when the device is not connected to the internet.
 * **Audience Targeting:** You can target feature flags to specific users or segments of users based on criteria such as user ID or device type.
 * **Metrics Collection:** FeatherQuill can collect metrics on how feature flags are being used, which can be helpful for evaluating the effectiveness of your A/B tests or other rollout strategies.
+* **SwiftUI Integration:** Provides a `Feature` struct that integrates seamlessly with SwiftUI for easy feature access in your views.
 
 ## Requirements 
 
@@ -52,83 +53,53 @@ dependencies: [
 ]
 ```
 
-## Usage
+### Usage
+
+FeatherQuill leverages protocols and generics for a flexible and type-safe experience. Here's a simplified example of how to define and use a feature:
 
 ```swift
-import FeatherQuill
+// Define a user type (e.g., user roles)
+public enum UserRole: UserType {
+  case free
+  case pro
+  case admin
 
-// Initialize the client with your bundle identifier as the domain
-let plausible = Plausible(domain: "com.example.yourApp")
+  public static var `default`: UserRole {
+    return .free
+  }
+}
 
-// Define an event
-let event = Event(url: "app://localhost/login")
+// Define a feature with a default value and targeting
+struct MyFeature: FeatureFlag {
+  static var audience: UserRole { .pro }
+  static var probability: Double { 0.2 } // 20% chance of being enabled
+  static var initialValue: Bool { false }
+  static var options: AvailabilityOptions { .default }
 
-// Send the event
-plausible.send(event: event)
-```
+  @Sendable
+  static func evaluateUser(_ userType: UserRole) async -> Bool {
+    // Optional: Implement custom user evaluation logic here
+    return true
+  }
+}
 
-### `Plausible` Client
+extension EnvironmentValues {
+  public var newDesignFeature: MyFeature.Feature { self[MyFeature.self] }
+}
 
-`Plausible` is a client for interacting with the Plausible API. It is initialized with a domain, which is typically your app's bundle identifier. The `Plausible` client is used to send events to the Plausible API for tracking and analysis.
+// Accessing the feature in a SwiftUI view
+struct MyView: View {
+  @Environment(\.myFeature) var myFeature
 
-To construct a `Plausible` instance, you need to provide a domain. The domain is a string that identifies your application, typically the bundle identifier of your app.
-
-```swift
-let plausible = Plausible(domain: "com.example.yourApp")
-```
-
-By default `Plausible` uses a `URLSessionTransport`, however you can use alternatives such as AsyncClient.
-
-### Sending an `Event`
-
-`Event` represents an event in your system. An event has a name, and optionally, a domain, URL, referrer, custom properties (`props`), and revenue information. You can create an `Event` instance and send it using the `Plausible` client.
-
-To construct an `Event`, you need to provide at least a name. The name is a string that identifies the event you want to track. Optionally, you can also provide:
-
-- **`name`** string that represents the name of the event. _Default_ is **pageview**.
-- **`url`** string that represents the URL where the event occurred. For an app you may wish to use a app url such as `app://localhost/login`.
-- `domain` _optional_ string that identifies the domain in which the event occurred. Overrides whatever was set in the `Plausible` instance.
-- `referrer` _optional_ string that represents the URL of the referrer
-- `props` _optional_ dictionary of custom properties associated with the event.
-- `revenue` _optional_ `Revenue` instance that represents the revenue data associated with the event
-
-```swift
-let event = Event
-    name: "eventName", 
-    domain: "domain",
-    url: "url", 
-    referrer: "referrer", 
-    props: ["key": "value"], 
-    revenue: Revenue(
-        currencyCode: "USD", 
-        amount: 100
-    )
-)
-```
-
-FeatherQuill provides two ways to send events to the Plausible API:
-
-#### Asynchronous Throwing Method
-
-This method sends an event to the Plausible API and throws an error if the operation fails. This is useful when you want to handle errors in your own way. Here's an example:
-
-```swift
-do {
-    try await plausible.postEvent(event)
-} catch {
-    print("Failed to post event: \(error)")
+  var body: some View {
+    if myFeature.isAvailable {
+      Toggle("Is Enabled", isOn: myFeature.bindingValue)
+    } else {
+      Text("This feature is disabled.")
+    }
+  }
 }
 ```
-
-#### Synchronous Method
-
-This method sends an event to the Plausible API in the background and ignores any errors that occur. This is useful when you don't need to handle errors and want to fire-and-forget the event. Here's an example:
-
-```swift
-plausible.postEvent(event)
-```
-
-In both cases, `event` is an instance of `Event` that you want to send to the Plausible API.
 
 ## License
 
