@@ -25,7 +25,6 @@ FeatherQuill is a Swift package that provides a mechanism for implementing offli
 
 * **Offline Support:** Feature flags are stored locally on the device, so they can be used even when the device is not connected to the internet.
 * **Audience Targeting:** You can target feature flags to specific users or segments of users based on criteria such as user ID or device type.
-* **Metrics Collection:** FeatherQuill can collect metrics on how feature flags are being used, which can be helpful for evaluating the effectiveness of your A/B tests or other rollout strategies.
 * **SwiftUI Integration:** Provides a `Feature` struct that integrates seamlessly with SwiftUI for easy feature access in your views.
 
 ## Requirements 
