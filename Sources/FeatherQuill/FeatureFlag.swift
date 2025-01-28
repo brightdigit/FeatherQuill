@@ -49,7 +49,7 @@
 
   public protocol FeatureFlag: EnvironmentKey
     where Value == FeatherQuill.Feature<ValueType, UserTypeValue> {
-    associatedtype ValueType = Bool
+    associatedtype ValueType : Sendable = Bool
     associatedtype UserTypeValue: UserType
 
     typealias Feature = FeatherQuill.Feature<ValueType, UserTypeValue>

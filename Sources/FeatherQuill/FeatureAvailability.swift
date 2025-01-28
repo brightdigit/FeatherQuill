@@ -29,20 +29,32 @@
 
 import Foundation
 
+
+
+protocol UserDefaultable : Sendable {
+  func bool(forKey key: String) -> Bool
+  func bool(forKey key: String) -> Bool?
+  func set(_ value: FeatureAvailabilityMetrics<some Any>, forKey key: String)
+  func set(_ value: Bool, forKey key: String)
+  func metrics<UserTypeValue>(
+    forKey key: String
+  ) -> FeatureAvailabilityMetrics<UserTypeValue>?
+}
+
 internal struct FeatureAvailability<UserTypeValue: UserType>: Sendable {
-  private let userDefaults: UserDefaults
+  private let userDefaults: any UserDefaultable
   private let metricsKey: String
   private let availabilityKey: String
   private let options: AvailabilityOptions
   private let metrics: FeatureAvailabilityMetrics<UserTypeValue>
 
   internal var value: Bool {
-    assert((userDefaults.object(forKey: availabilityKey) as? Bool) != nil)
+    //assert((userDefaults.object(forKey: availabilityKey) as? Bool) != nil)
     return userDefaults.bool(forKey: availabilityKey)
   }
 
   private init(
-    userDefaults: UserDefaults,
+    userDefaults: any UserDefaultable,
     metricsKey: String,
     availabilityKey: String,
     options: AvailabilityOptions,
@@ -99,9 +111,11 @@ internal struct FeatureAvailability<UserTypeValue: UserType>: Sendable {
     with audienceCallback: @Sendable @escaping (UserTypeValue) async -> Bool,
     force: Bool = false
   ) {
-    let isAvailable = userDefaults.object(forKey: availabilityKey).map { _ in
-      userDefaults.bool(forKey: availabilityKey)
-    }
+//    let isAvailable = userDefaults.object(forKey: availabilityKey).map { _ in
+//      userDefaults.bool(forKey: availabilityKey)
+//    }
+    
+    let isAvailable : Bool? = userDefaults.bool(forKey: availabilityKey)
     switch (isAvailable, force, options.contains(.allowOverwriteAvailable)) {
     case (true, _, false):
       return
@@ -125,5 +139,3 @@ internal struct FeatureAvailability<UserTypeValue: UserType>: Sendable {
     initializeAvailability(with: audienceCallback, force: metricsHaveChanged)
   }
 }
-
-extension UserDefaults: @unchecked Sendable {}

@@ -33,10 +33,11 @@
   import SwiftUI
 
   @Observable
-  internal class FeatureValue<ValueType> {
+internal class FeatureValue<ValueType : Sendable> {
     private let userDefaults: UserDefaults
     private let key: String
     private let fullKey: String
+  @MainActor
     internal var bindingValue: Binding<ValueType> {
       .init {
         self._storedValue
