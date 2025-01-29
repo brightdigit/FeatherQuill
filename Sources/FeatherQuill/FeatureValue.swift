@@ -3,7 +3,7 @@
 //  FeatherQuill
 //
 //  Created by Leo Dion.
-//  Copyright © 2024 BrightDigit.
+//  Copyright © 2025 BrightDigit.
 //
 //  Permission is hereby granted, free of charge, to any person
 //  obtaining a copy of this software and associated documentation
@@ -33,11 +33,11 @@
   import SwiftUI
 
   @Observable
-internal class FeatureValue<ValueType : Sendable> {
+  internal class FeatureValue<ValueType: Sendable> {
     private let userDefaults: UserDefaults
     private let key: String
     private let fullKey: String
-  @MainActor
+    @MainActor
     internal var bindingValue: Binding<ValueType> {
       .init {
         self._storedValue

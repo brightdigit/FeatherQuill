@@ -3,7 +3,7 @@
 //  FeatherQuill
 //
 //  Created by Leo Dion.
-//  Copyright © 2024 BrightDigit.
+//  Copyright © 2025 BrightDigit.
 //
 //  Permission is hereby granted, free of charge, to any person
 //  obtaining a copy of this software and associated documentation
@@ -49,7 +49,7 @@
 
   public protocol FeatureFlag: EnvironmentKey
     where Value == FeatherQuill.Feature<ValueType, UserTypeValue> {
-    associatedtype ValueType : Sendable = Bool
+    associatedtype ValueType: Sendable = Bool
     associatedtype UserTypeValue: UserType
 
     typealias Feature = FeatherQuill.Feature<ValueType, UserTypeValue>

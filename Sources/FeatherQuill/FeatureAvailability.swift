@@ -3,7 +3,7 @@
 //  FeatherQuill
 //
 //  Created by Leo Dion.
-//  Copyright © 2024 BrightDigit.
+//  Copyright © 2025 BrightDigit.
 //
 //  Permission is hereby granted, free of charge, to any person
 //  obtaining a copy of this software and associated documentation
@@ -29,18 +29,6 @@
 
 import Foundation
 
-
-
-protocol UserDefaultable : Sendable {
-  func bool(forKey key: String) -> Bool
-  func bool(forKey key: String) -> Bool?
-  func set(_ value: FeatureAvailabilityMetrics<some Any>, forKey key: String)
-  func set(_ value: Bool, forKey key: String)
-  func metrics<UserTypeValue>(
-    forKey key: String
-  ) -> FeatureAvailabilityMetrics<UserTypeValue>?
-}
-
 internal struct FeatureAvailability<UserTypeValue: UserType>: Sendable {
   private let userDefaults: any UserDefaultable
   private let metricsKey: String
@@ -49,8 +37,7 @@ internal struct FeatureAvailability<UserTypeValue: UserType>: Sendable {
   private let metrics: FeatureAvailabilityMetrics<UserTypeValue>
 
   internal var value: Bool {
-    //assert((userDefaults.object(forKey: availabilityKey) as? Bool) != nil)
-    return userDefaults.bool(forKey: availabilityKey)
+    userDefaults.bool(forKey: availabilityKey)
   }
 
   private init(
@@ -70,8 +57,26 @@ internal struct FeatureAvailability<UserTypeValue: UserType>: Sendable {
   internal init(
     key: String,
     userType: UserTypeValue,
+    suiteName: String,
     probability: Double = 0.0,
-    userDefaults: UserDefaults = .standard,
+    options: AvailabilityOptions = [],
+    _ availability: @Sendable @escaping (UserTypeValue) async -> Bool
+  ) {
+    self.init(
+      key: key,
+      userType: userType,
+      probability: probability,
+      userDefaults: UserDefaults.wrappedSuite(named: suiteName),
+      options: options,
+      availability
+    )
+  }
+
+  internal init(
+    key: String,
+    userType: UserTypeValue,
+    probability: Double = 0.0,
+    userDefaults: any UserDefaultable = UserDefaults.wrappedStandard(),
     options: AvailabilityOptions = [],
     _ availability: @Sendable @escaping (UserTypeValue) async -> Bool
   ) {
@@ -111,11 +116,8 @@ internal struct FeatureAvailability<UserTypeValue: UserType>: Sendable {
     with audienceCallback: @Sendable @escaping (UserTypeValue) async -> Bool,
     force: Bool = false
   ) {
-//    let isAvailable = userDefaults.object(forKey: availabilityKey).map { _ in
-//      userDefaults.bool(forKey: availabilityKey)
-//    }
-    
-    let isAvailable : Bool? = userDefaults.bool(forKey: availabilityKey)
+    // swiftlint:disable:next discouraged_optional_boolean
+    let isAvailable: Bool? = userDefaults.bool(forKey: availabilityKey)
     switch (isAvailable, force, options.contains(.allowOverwriteAvailable)) {
     case (true, _, false):
       return
