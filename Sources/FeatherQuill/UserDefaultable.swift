@@ -59,28 +59,63 @@ private struct UserDefaultsWrapper: UserDefaultable {
   }
 }
 
+/// Sendable safe way to access UserDefaults.
 public protocol UserDefaultable: Sendable {
+  /// Retrieves a boolean value from user defaults for the specified key.
+  /// - Parameter key: The key to look up in user defaults.
+  /// - Returns: The boolean value associated with the key.
   func bool(forKey key: String) -> Bool
+
+  /// Retrieves a double value from user defaults for the specified key.
+  /// - Parameter key: The key to look up in user defaults.
+  /// - Returns: The double value associated with the key.
   func double(forKey key: String) -> Double
+
+  /// Retrieves an arbitrary object from user defaults for the specified key.
+  /// - Parameter key: The key to look up in user defaults.
+  /// - Returns: The object associated with the key, if it exists.
   func object(forKey key: String) -> Any?
+
+  /// Stores a boolean value in user defaults for the specified key.
+  /// - Parameters:
+  ///   - value: The boolean value to store.
+  ///   - key: The key under which to store the value.
   func set(_ value: Bool, forKey key: String)
+
+  /// Stores a double value in user defaults for the specified key.
+  /// - Parameters:
+  ///   - value: The double value to store.
+  ///   - key: The key under which to store the value.
   func set(_ value: Double, forKey key: String)
 }
 
 extension UserDefaultable {
-  // swiftlint:disable:next discouraged_optional_boolean
+  // swiftlint:disable discouraged_optional_boolean
+
+  /// Retrieves an optional boolean value from user defaults for the specified key.
+  /// This implementation first checks if an object exists for the key
+  /// before attempting to read it as a boolean.
+  /// - Parameter key: The key to look up in user defaults.
+  /// - Returns: The boolean value if it exists and can be read as a boolean, otherwise nil.
   public func bool(forKey key: String) -> Bool? {
     self.object(forKey: key).map { _ in
       self.bool(forKey: key)
     }
   }
+
+  // swiftlint:enable discouraged_optional_boolean
 }
 
 extension UserDefaults {
+  /// Creates a wrapped instance of the standard UserDefaults that conforms to UserDefaultable.
+  /// - Returns: A UserDefaultable instance that wraps the standard UserDefaults.
   public static func wrappedStandard() -> any UserDefaultable {
     UserDefaultsWrapper(userDefaults: .standard)
   }
 
+  /// Creates a wrapped instance of UserDefaults for the specified suite that conforms to UserDefaultable.
+  /// - Parameter suiteName: The name of the suite to create UserDefaults for.
+  /// - Returns: A UserDefaultable instance that wraps the suite-specific UserDefaults.
   public static func wrappedSuite(named suiteName: String) -> any UserDefaultable {
     UserDefaultsWrapper(userDefaults: UserDefaults(suiteName: suiteName))
   }

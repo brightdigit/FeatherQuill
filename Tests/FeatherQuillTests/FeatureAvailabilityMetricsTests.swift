@@ -32,6 +32,8 @@ import XCTest
 
 internal final class FeatureAvailabilityMetricsTests: XCTestCase {
   internal func testUserDefaultsMetrics() {
+    XCTAssert(true)
+
 //    let expected = FeatureAvailabilityMetrics(
 //      userType: AudienceType.proSubscriber,
 //      probability: .random(in: 0 ..< 1)
@@ -41,6 +43,5 @@ internal final class FeatureAvailabilityMetricsTests: XCTestCase {
 //      UserDefaults.standard.metrics(forKey: "testMetrics")
 //
 //    XCTAssertEqual(expected, actual)
-    XCTAssert(true)
   }
 }
