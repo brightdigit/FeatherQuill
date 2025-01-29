@@ -3,7 +3,7 @@
 //  FeatherQuill
 //
 //  Created by Leo Dion.
-//  Copyright © 2024 BrightDigit.
+//  Copyright © 2025 BrightDigit.
 //
 //  Permission is hereby granted, free of charge, to any person
 //  obtaining a copy of this software and associated documentation
@@ -36,9 +36,9 @@ internal final class FeatureAvailabilityMetricsTests: XCTestCase {
       userType: AudienceType.proSubscriber,
       probability: .random(in: 0 ..< 1)
     )
-    UserDefaults.standard.set(expected, forKey: "testMetrics")
+    UserDefaults.wrappedStandard().set(expected, forKey: "testMetrics")
     let actual: FeatureAvailabilityMetrics<AudienceType>? =
-      UserDefaults.standard.metrics(forKey: "testMetrics")
+      UserDefaults.wrappedStandard().metrics(forKey: "testMetrics")
 
     XCTAssertEqual(expected, actual)
   }
