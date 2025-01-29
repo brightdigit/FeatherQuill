@@ -1,5 +1,5 @@
 //
-//  FeatureAvailabilityMetricsTests.swift
+//  FeatureFlagTests.swift
 //  FeatherQuill
 //
 //  Created by Leo Dion.
@@ -27,19 +27,21 @@
 //  OTHER DEALINGS IN THE SOFTWARE.
 //
 
-@testable import FeatherQuill
 import XCTest
 
-internal final class FeatureAvailabilityMetricsTests: XCTestCase {
-  internal func testUserDefaultsMetrics() {
-    let expected = FeatureAvailabilityMetrics(
-      userType: AudienceType.proSubscriber,
-      probability: .random(in: 0 ..< 1)
-    )
-    UserDefaults.wrappedStandard().set(expected, forKey: "testMetrics")
-    let actual: FeatureAvailabilityMetrics<AudienceType>? =
-      UserDefaults.wrappedStandard().metrics(forKey: "testMetrics")
-
-    XCTAssertEqual(expected, actual)
+internal final class FeatureFlagTests: XCTestCase {
+  internal func testFlag() throws {
+    #if canImport(SwiftUI)
+      // swiftlint:disable:next force_unwrapping
+      let domain = Bundle.main.bundleIdentifier!
+      UserDefaults.standard.removePersistentDomain(forName: domain)
+      XCTAssertEqual(MockFeatureFlag.key, "Mock")
+      let defaultMock = MockFeatureFlag.defaultValue
+      XCTAssertEqual(
+        defaultMock.value, MockFeatureFlag.initialValue
+      )
+    #else
+      throw XCTSkip("Not suported outside of SwiftUI.")
+    #endif
   }
 }

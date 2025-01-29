@@ -1,5 +1,5 @@
 //
-//  FeatureAvailabilityMetricsTests.swift
+//  MockFeatureFlag.swift
 //  FeatherQuill
 //
 //  Created by Leo Dion.
@@ -27,19 +27,18 @@
 //  OTHER DEALINGS IN THE SOFTWARE.
 //
 
-@testable import FeatherQuill
-import XCTest
+#if canImport(SwiftUI)
+  import FeatherQuill
 
-internal final class FeatureAvailabilityMetricsTests: XCTestCase {
-  internal func testUserDefaultsMetrics() {
-    let expected = FeatureAvailabilityMetrics(
-      userType: AudienceType.proSubscriber,
-      probability: .random(in: 0 ..< 1)
-    )
-    UserDefaults.wrappedStandard().set(expected, forKey: "testMetrics")
-    let actual: FeatureAvailabilityMetrics<AudienceType>? =
-      UserDefaults.wrappedStandard().metrics(forKey: "testMetrics")
+  internal struct MockFeatureFlag: FeatureFlag {
+    internal typealias UserTypeValue = AudienceType
 
-    XCTAssertEqual(expected, actual)
+    internal static let initialValue: Int = .random(in: 1_000 ... 9_999)
+
+    internal static let probability: Double = .random(in: 0 ..< 1)
+
+    internal static func evaluateUser(_: AudienceType) async -> Bool {
+      true
+    }
   }
-}
+#endif

@@ -1,5 +1,5 @@
 //
-//  FeatureAvailabilityMetricsTests.swift
+//  FeatureTests.swift
 //  FeatherQuill
 //
 //  Created by Leo Dion.
@@ -30,16 +30,41 @@
 @testable import FeatherQuill
 import XCTest
 
-internal final class FeatureAvailabilityMetricsTests: XCTestCase {
-  internal func testUserDefaultsMetrics() {
-    let expected = FeatureAvailabilityMetrics(
-      userType: AudienceType.proSubscriber,
-      probability: .random(in: 0 ..< 1)
-    )
-    UserDefaults.wrappedStandard().set(expected, forKey: "testMetrics")
-    let actual: FeatureAvailabilityMetrics<AudienceType>? =
-      UserDefaults.wrappedStandard().metrics(forKey: "testMetrics")
+internal final class FeatureTests: XCTestCase {
+  private static func fullKey(for featureKey: String) -> String {
+    [FeatureFlags.rootKey, featureKey, FeatureFlags.valueKey].joined(separator: ".")
+  }
 
-    XCTAssertEqual(expected, actual)
+  #if canImport(SwiftUI)
+    private static func feature(key: String) -> Feature<Int, AudienceType> {
+      Feature(
+        key: key,
+        defaultValue: 0,
+        userType: AudienceType.default
+      ) { _ in true }
+    }
+
+    private static func setExpectedValue<ValueType>(
+      _ expectedValue: ValueType,
+      to feature: Feature<ValueType, some Any>
+    ) async {
+      await MainActor.run {
+        feature.bindingValue.wrappedValue = expectedValue
+      }
+    }
+  #endif
+
+  internal func testWrapped() async throws {
+    #if canImport(SwiftUI)
+      let key = UUID().uuidString
+      let expectedValue = Int.random(in: 100 ... 1_000)
+      let feature = Self.feature(key: key)
+      let fullKey = Self.fullKey(for: key)
+      await Self.setExpectedValue(expectedValue, to: feature)
+      let actualValue = UserDefaults.standard.integer(forKey: fullKey)
+      XCTAssertEqual(actualValue, expectedValue)
+    #else
+      throw XCTSkip("Not suported outside of SwiftUI.")
+    #endif
   }
 }
