@@ -1,5 +1,5 @@
 //
-//  FeatureAvailabilityMetricsTests.swift
+//  AudienceType.swift
 //  FeatherQuill
 //
 //  Created by Leo Dion.
@@ -27,19 +27,26 @@
 //  OTHER DEALINGS IN THE SOFTWARE.
 //
 
-@testable import FeatherQuill
-import XCTest
+import FeatherQuill
 
-internal final class FeatureAvailabilityMetricsTests: XCTestCase {
-  internal func testUserDefaultsMetrics() {
-    let expected = FeatureAvailabilityMetrics(
-      userType: AudienceType.proSubscriber,
-      probability: .random(in: 0 ..< 1)
-    )
-    UserDefaults.wrappedStandard().set(expected, forKey: "testMetrics")
-    let actual: FeatureAvailabilityMetrics<AudienceType>? =
-    UserDefaults.wrappedStandard().metrics(forKey: "testMetrics")
+public struct AudienceType: UserType {
+  public typealias RawValue = Int
+  public static let proSubscriber: AudienceType = .init(rawValue: 1)
+  public static let testFlightBeta: AudienceType = .init(rawValue: 2)
+  public static let any: AudienceType = .init(rawValue: .max)
+  public static let `default`: AudienceType = [.testFlightBeta, proSubscriber]
+  public static let none: AudienceType = []
+  public var rawValue: Int
 
-    XCTAssertEqual(expected, actual)
+  public init(rawValue: Int) {
+    self.rawValue = rawValue
+  }
+
+  public static func includes(_ value: AudienceType) -> Bool {
+    guard value.rawValue > 0 else {
+      return false
+    }
+    let value: Bool = .random()
+    return value
   }
 }
