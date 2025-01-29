@@ -3,7 +3,7 @@
 //  FeatherQuill
 //
 //  Created by Leo Dion.
-//  Copyright © 2024 BrightDigit.
+//  Copyright © 2025 BrightDigit.
 //
 //  Permission is hereby granted, free of charge, to any person
 //  obtaining a copy of this software and associated documentation
@@ -33,10 +33,11 @@
   import SwiftUI
 
   @Observable
-  internal class FeatureValue<ValueType> {
+  internal class FeatureValue<ValueType: Sendable> {
     private let userDefaults: UserDefaults
     private let key: String
     private let fullKey: String
+    @MainActor
     internal var bindingValue: Binding<ValueType> {
       .init {
         self._storedValue
@@ -53,10 +54,8 @@
 
     private var _storedValue: ValueType {
       didSet {
-        print("didSet \(_storedValue)")
         userDefaults.setValue(_storedValue, forKey: fullKey)
         userDefaults.synchronize()
-        print("set \(_storedValue)")
       }
     }
 

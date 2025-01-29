@@ -3,7 +3,7 @@
 //  FeatherQuill
 //
 //  Created by Leo Dion.
-//  Copyright © 2024 BrightDigit.
+//  Copyright © 2025 BrightDigit.
 //
 //  Permission is hereby granted, free of charge, to any person
 //  obtaining a copy of this software and associated documentation
@@ -33,11 +33,12 @@
 
   /// Set of values for the Feature.
   @Observable
-  public class Feature<ValueType, UserTypeValue: UserType> {
+  public class Feature<ValueType: Sendable, UserTypeValue: UserType> {
     private let featureValue: FeatureValue<ValueType>
     private let availability: FeatureAvailability<UserTypeValue>
 
     /// Binding value to use for SwiftUI Views.
+    @MainActor
     public var bindingValue: Binding<ValueType> {
       featureValue.bindingValue
     }

@@ -3,7 +3,7 @@
 //  FeatherQuill
 //
 //  Created by Leo Dion.
-//  Copyright © 2024 BrightDigit.
+//  Copyright © 2025 BrightDigit.
 //
 //  Permission is hereby granted, free of charge, to any person
 //  obtaining a copy of this software and associated documentation
@@ -68,7 +68,7 @@ internal struct FeatureAvailabilityMetrics<UserTypeValue: UserType>: Equatable, 
   }
 }
 
-extension UserDefaults {
+extension UserDefaultable {
   internal func set(_ value: FeatureAvailabilityMetrics<some Any>, forKey key: String) {
     set(value.value, forKey: key)
   }
