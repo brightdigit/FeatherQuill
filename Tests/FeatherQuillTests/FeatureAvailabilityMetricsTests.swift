@@ -38,7 +38,7 @@ internal final class FeatureAvailabilityMetricsTests: XCTestCase {
     )
     UserDefaults.wrappedStandard().set(expected, forKey: "testMetrics")
     let actual: FeatureAvailabilityMetrics<AudienceType>? =
-    UserDefaults.wrappedStandard().metrics(forKey: "testMetrics")
+      UserDefaults.wrappedStandard().metrics(forKey: "testMetrics")
 
     XCTAssertEqual(expected, actual)
   }
